@@ -7,4 +7,4 @@ builder = "nixpacks"
 
 [deploy]
 startCommand = "node bot.js"
-cronSchedule = "15 7 * * 1-5"
+cronSchedule = "0 7 * * 1-5"
