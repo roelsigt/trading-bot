@@ -154,7 +154,7 @@ Benchmark gisteren: ${benchmarkChange !== null ? `${benchmarkChange.toFixed(2)}%
 Geef ALLEEN dit JSON object terug, geen tekst erbuiten:
 {"signaal":"KOOP of VERKOOP of GEEN SETUP","sterkte":0,"entry_min":0,"entry_max":0,"stop_loss":0,"take_profit_1":0,"take_profit_2":0,"rr_ratio":0.0,"context_score":0,"setup_uitleg":"max 2 zinnen","waarschuwing":"tekst of null","niet_instappen_als":"conditie"}
 
-Alleen KOOP of VERKOOP bij sterkte >= 7.`;
+Alleen KOOP of VERKOOP bij sterkte >= 7 EN rr_ratio >= 2.5. Als rr_ratio lager is, geef GEEN SETUP terug.`;
 
   const response = await httpsPost("api.anthropic.com", "/v1/messages", {
     model: "claude-sonnet-4-20250514",
@@ -227,8 +227,8 @@ function signalCard(data, analyse, currency) {
 }
 
 function buildEmailHTML(usResults, euResults, spyData, date) {
-  const usSignals = usResults.filter(r => r.analyse.signaal !== "GEEN SETUP");
-  const euSignals = euResults.filter(r => r.analyse.signaal !== "GEEN SETUP");
+  const usSignals = usResults.filter(r => r.analyse.signaal !== "GEEN SETUP" && r.analyse.rr_ratio >= 2.5);
+  const euSignals = euResults.filter(r => r.analyse.signaal !== "GEEN SETUP" && r.analyse.rr_ratio >= 2.5);
   const totalSignals = usSignals.length + euSignals.length;
   const spyColor = spyData && spyData.priceChange >= 0 ? "#1D9E75" : "#E24B4A";
 
