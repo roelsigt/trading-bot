@@ -1,0 +1,10 @@
+# Railway configuratie
+# De bot draait elke beursdag om 07:15 UTC = 08:15 Vlaamse tijd (winter) / 09:15 (zomer)
+# Pas aan naar 06:15 UTC in de zomer (CEST = UTC+2)
+
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "node bot.js"
+cronSchedule = "15 7 * * 1-5"
