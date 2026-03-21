@@ -336,8 +336,9 @@ async function runBot() {
   const usResults = [];
   for (const data of usCandidates) {
     try {
-      const analyse = await analyseWithClaude(data, spyChange);
-      usResults.push({ data, analyse });
+     const analyse = await analyseWithClaude(data, spyChange);
+if (!analyse) { console.log(`  ⚠️ ${data.naam}: analyse mislukt`); continue; }
+euResults.push({ data, analyse });
       console.log(`  ${data.ticker}: ${analyse.signaal} (${analyse.sterkte}/10)`);
       await sleep(1000);
     } catch (err) { console.error(`  ❌ ${data.ticker}:`, err.message); }
