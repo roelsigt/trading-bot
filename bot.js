@@ -163,7 +163,10 @@ Alleen KOOP of VERKOOP bij sterkte >= 7 EN rr_ratio >= 2.5. Als rr_ratio lager i
   }, { "x-api-key": ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01" });
 
   const text = response.content[0].text;
-  return JSON.parse(text.replace(/```json|```/g, "").trim());
+  const clean = text.replace(/```json|```/g, "").trim();
+const jsonMatch = clean.match(/\{[\s\S]*\}/);
+if (!jsonMatch) { console.log("  ⚠️ Geen JSON in response:", clean.substring(0, 100)); return null; }
+return JSON.parse(jsonMatch[0]);
 }
 
 function signalCard(data, analyse, currency) {
