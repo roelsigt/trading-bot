@@ -67,11 +67,17 @@ function getPastDate(days) { const d = new Date(); d.setDate(d.getDate() - days)
 
 async function getUSData(ticker) {
   try {
-    const url = `https://api.financialdatasets.ai/prices/?ticker=${ticker}&interval=day&interval_multiplier=1&start_date=${getPastDate(30)}&end_date=${getToday()}`;
-    const data = await httpsGet(url, FINANCIAL_DATASETS_KEY);
-    if (!data.prices || data.prices.length < 15) return null;
-    const prices = data.prices.sort((a, b) => new Date(b.time) - new Date(a.time));
-    return calcMetrics(ticker, prices.map(p => ({ close: p.close, volume: p.volume, high: p.high, low: p.low })), "US");
+    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1mo`;
+    const data = await httpsGet(url);
+    const result = data?.chart?.result?.[0];
+    if (!result) return null;
+    const closes = result.indicators.quote[0].close.filter(Boolean);
+    const volumes = result.indicators.quote[0].volume.filter(Boolean);
+    const highs = result.indicators.quote[0].high.filter(Boolean);
+    const lows = result.indicators.quote[0].low.filter(Boolean);
+    if (closes.length < 15) return null;
+    const combined = closes.map((c, i) => ({ close: c, volume: volumes[i] || 0, high: highs[i] || c, low: lows[i] || c })).reverse();
+    return calcMetrics(ticker, combined, "US");
   } catch (err) { return null; }
 }
 
