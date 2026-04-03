@@ -126,6 +126,9 @@ function screenTicker(data) {
   const overbought = data.rsi > 65;
   const volumeSpike = data.volumeRatio > 1.5;
   const bigMove = Math.abs(data.priceChange) > 2;
+  if (data.markt !== "US") {
+    return oversold || overbought;
+  }
   return (oversold || overbought) && (volumeSpike || bigMove);
 }
 
